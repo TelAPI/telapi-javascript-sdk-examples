@@ -1,0 +1,3 @@
+<Response>
+	<Dial>{{destination_address}}</Dial>
+</Response>

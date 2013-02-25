@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://telapi.dev/static/sdk.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Click2Call</a>
+        </div>
+      </div>
+    </div>
+
+    <br /><br /><br /><br /><br />
+
+    <div class="container">
+
+      <h1>Click2Call Example</h1>
+      
+      <br />
+
+      <p>This is a working example of click to call. In order to run example you will need to update <span class="label">{{client_token}}</span> and <span class="label">{{client_passwored}}</span> which you got by generating client token. Help with token generation can be found at: <a href="http://www.telapi.com/docs/sdks/javascript/installation">http://www.telapi.com/docs/sdks/javascript/installation</a>. Example of TelAPI InboundXML document can be found <a href="https://github.com/TelAPI/telapi-javascript-sdk-examples/tree/master/click2call/inboundxml.xml">here</a>. We left <span class="label">debug_status</span> enabled due to the debugging that you will need to do! Logs can be seen under developer console.</p>
+
+      <br /><br />
+
+      <div id="telapi-button-container">
+        <a href="javascript:void();" id="telapi_connect_button" style="opacity:0.4;">
+          <img src="http://dev.telapi.com/release/img/telapi-connect-logo.png"> <span>Call Me</span>
+        </a>
+        <a href="javascript:void();" id="telapi_hangup_button" style="display:none;">
+          <img src="http://dev.telapi.com/release/img/telapi-connect-logo.png"> <span>Hangup Call</span>
+        </a>
+      </div>
+      <span style="font-weight:bold;font-size:22px;float:left;margin-top:-35px;margin-left:140px;"> -> Click button to call from browser! ( <a href="#" id="setup_privileges">Setup Microphone</a> )</span>
+
+
+      <div id="telapi_flash_wrapper"><div id="flash_element_id"></div></div>
+
+    </div> <!-- /container -->
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+
+    <style type="text/css">
+    #telapi_connect_button{cursor:pointer;display:inline-block;background-color:#e6e6e6;background-repeat:no-repeat;background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));background-image:-webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:-moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);background-image:-ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:-o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);padding:5px 14px 6px;text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);color:#333;font-size:18px;line-height:normal;border:1px solid #ccc;border-bottom-color:#bbb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);-moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);-webkit-transition:0.1s linear all;-moz-transition:0.1s linear all;-ms-transition:0.1s linear all;-o-transition:0.1s linear all;transition:0.1s linear all;overflow:auto;}
+    #telapi_connect_button:hover{background-position:0 -15px;color:#333;text-decoration:none;}
+    #telapi_connect_button img{ width:32px; display:inline-block; margin:5px 0px 3px 0px; float:left; }
+    #telapi_connect_button span{ float:left; padding:6px 0px 0px 5px; }
+    #telapi_hangup_button{cursor:pointer;display:inline-block;background-color:#e6e6e6;background-repeat:no-repeat;background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));background-image:-webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:-moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);background-image:-ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:-o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);background-image:linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);padding:5px 14px 6px;text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);color:#333;font-size:18px;line-height:normal;border:1px solid #ccc;border-bottom-color:#bbb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);-moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);-webkit-transition:0.1s linear all;-moz-transition:0.1s linear all;-ms-transition:0.1s linear all;-o-transition:0.1s linear all;transition:0.1s linear all;overflow:auto;}
+    #telapi_hangup_button:hover{background-position:0 -15px;color:#333;text-decoration:none;}
+    #telapi_hangup_button img{ width:32px; display:inline-block; margin:5px 0px 3px 0px; float:left; }
+    #telapi_hangup_button span{ float:left; padding:6px 0px 0px 5px; }
+    #telapi_flash_wrapper{position:absolute;border:5px #f1f1f1 solid;border-radius:5px;margin-left:0px;margin-top:20px;}
+    </style>
+
+
+    <script type="text/javascript">
+      var _telapi = {
+          token : '{{client_token}}',
+          password : '{{client_password}}',
+          debug_status : true,
+          connection : {
+            flash_container_id : 'flash_element_id'
+          }
+      };
+
+
+      telapi.available(function(){
+
+          telapi.fetch('calls');
+
+          telapi.on('connection.status.loggedin', function(){
+
+              telapi_calls = telapi.get('calls');
+
+              jQuery('#telapi_connect_button').fadeTo(350, 1.0);
+
+              jQuery('#telapi_connect_button').click(function(e){
+                e.preventDefault();
+                telapi_calls.new();
+              });
+
+              telapi.on('calls.status.new_outgoing_call', function(){
+                jQuery('#telapi_connect_button').fadeOut(350, function(){
+                  jQuery('#telapi_hangup_button').fadeIn(350);
+                });
+              });
+
+              jQuery('#telapi_hangup_button').click(function(e){
+                e.preventDefault();
+                telapi_calls.hangup();
+              });
+
+              telapi.on('calls.status.call_hangup', function(){
+                jQuery('#telapi_hangup_button').fadeOut(350, function(){
+                  jQuery('#telapi_connect_button').fadeIn(350);
+                });
+              });
+
+          });
+
+          telapi.on('connection.status.security_closed', function(){
+            jQuery('#telapi_flash_wrapper').css('visibility', 'hidden');
+            jQuery('#flash_element_id').css('visibility', 'hidden');
+          });
+
+
+          jQuery('#setup_privileges').bind('click', function(e){
+            e.preventDefault();
+            jQuery('#telapi_flash_wrapper').css('visibility', 'visible');
+            jQuery('#flash_element_id').css('visibility', 'visible');
+
+          });
+      });
+
+    </script>
+  </body>
+</html>
